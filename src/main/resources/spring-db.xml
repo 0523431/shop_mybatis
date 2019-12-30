@@ -48,11 +48,14 @@
 	
 	<!-- mybatis 관련 설정 -->
 	<!-- class="org......"을 이용하려면 jar파일이 필요해 그러니까 pom.xml에서 추가 설정을 해줘야함 -->
+	<!-- mybatis-config.xml에서는 mapper 경로를 설정해줌 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
 		<!-- 환경설정을 한 xml을 읽어 -->
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
 	</bean>
+	<!-- 세션을 읽어 줌 -->
+	<!-- 그러니까 Dao에서 sqlSessionTemplate을 주입받으면, 세션이랑 연결이 되는거야 -->
 	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
 		<!-- 생성자 -->
 		<constructor-arg ref="sqlSessionFactory" />

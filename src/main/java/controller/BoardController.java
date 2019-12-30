@@ -289,7 +289,7 @@ public class BoardController {
 		// 파일이름은 절대경로로 들어가야하고
 		// 파일이름과 ck넘버를
 		// view/ckedit.jsp에 넘겨줘야함 (그래야 클라이언트가 알 수 있음)
-		String fileName = "/shop03/board/imgfile/"+upload.getOriginalFilename();
+		String fileName = "/shop04/board/imgfile/"+upload.getOriginalFilename();
 		model.addAttribute("fileName", fileName);
 		model.addAttribute("CKEditorFuncNum", CKEditorFuncNum);
 		return "ckedit"; // view단

@@ -89,7 +89,10 @@ public class UserController {
 				session.setAttribute("loginUser", dbUser);
 				model.setViewName("redirect:main.shop");
 			}
-		} catch(EmptyResultDataAccessException e) {
+		} catch(LoginException e) {
+			// mybatis에서 없는 아이디로 로그인시 나오는 오류 해결
+			// 원래 있던 EmptyResultDataAccessException은 spring jdbc에서만 발생하는 예외
+			// 내가 만든 예외로 바꿔주기
 			e.printStackTrace();
 			bresult.reject("error.login.id");
 		}
@@ -135,17 +138,26 @@ public class UserController {
 		User user = service.getUser(id);
 		
 		// 사용자가 주문한 모든 주문내역을 조회
+		// 관리자일 경우, 모든 주문 내역을 조회
 		List<Sale> salelist = service.salelist(id);
 		for(Sale sale : salelist) {
 			// 주문번호에 해당하는 주문 상품 내역 조회(아이템 리스트)
 			List<SaleItem> saleitemlist = service.saleItemList(sale.getSaleid());
-			for(SaleItem si :saleitemlist) { // 주문내역 1개 saleitemlist
+			for(SaleItem itemlist :saleitemlist) { // 주문내역 1개 saleitemlist
 				// 주문내역 1개에 해당하는 Item 조회
 				// 주문내역이 있을 때, 아이템 삭제가 불가능함 (db 외래키 설정)
-				Item item = service.itemInfo(si.getItemid());
-				si.setItem(item); // SaleItem에 저장
+				Item item = service.itemInfo(itemlist.getItemid());
+				itemlist.setItem(item); // SaleItem에 저장
 			}
 			sale.setItemList(saleitemlist);
+			
+			// Sale에 있는 User에 사용자정보(값) 넣어주기
+			try {
+				User username = service.getUser(sale.getUserid());
+				sale.setUser(username); // sale은 salelist에 저장되게 됨
+			} catch(LoginException e) {
+				// 탈퇴한 회원이 있을 경우	
+			}
 		}
 		
 		mav.addObject("user", user);

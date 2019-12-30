@@ -31,7 +31,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import exception.LoginException;
+import logic.Item;
 import logic.Mail;
+import logic.Sale;
+import logic.SaleItem;
 import logic.ShopService;
 import logic.User;
 

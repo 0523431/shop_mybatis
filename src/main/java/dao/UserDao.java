@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import dao.mapper.UserMapper;
+import exception.LoginException;
 import logic.User;
 
 //@Component + dao 기능 (객체화가 됨)
@@ -26,7 +27,13 @@ public class UserDao {
 	public User selectOne(String userid) {
 		param.clear();
 		param.put("userid", userid);
-		return sqlSession.getMapper(UserMapper.class).select(param).get(0);
+		
+		// 아이디가 없어서 get(0)이 null이면 오류가 발생
+		// return sqlSession.getMapper(UserMapper.class).select(param).get(0);
+		List<User> list = sqlSession.getMapper(UserMapper.class).select(param);
+		if(list ==null || list.isEmpty()) {
+			throw new LoginException("로그인하려고하는데 해당 아이디가 없습니다(UserDao)", "");
+		} else return list.get(0); 
 	}
 
 	public void update(User user) {

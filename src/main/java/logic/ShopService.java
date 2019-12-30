@@ -138,6 +138,10 @@ public class ShopService {
 	
 	// user가 산 주문 목록
 	public List<Sale> salelist(String id) {
+		if(id.equals("headmaster")) {
+//			id =null;
+			return saleDao.list(null);
+		}
 		return saleDao.list(id);
 	}
 	
@@ -146,6 +150,10 @@ public class ShopService {
 		return saleItemDao.list(saleid);
 	}
 
+	public List<Sale> salelist() {
+		return saleDao.list();
+	}
+	
 	public void userUpdate(User user) {
 		userDao.update(user);
 	}
@@ -226,6 +234,5 @@ public class ShopService {
 	public List<User> adminlist(String[] idchks) {
 		return userDao.adminlist(idchks);
 	}
-
 
 }
